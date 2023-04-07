@@ -1,0 +1,37 @@
+clc;
+clear all;
+close all;
+
+%% Reading an image
+a1=imread('co2.jpg');
+a=double(a1);
+[row,col]=size(a);
+
+%% Transformation function (r1,s1)=(rmin,0), (r2,s2)=(rmax,255)
+t=0:255;
+x1=0*(t>=0 & t<=100); 
+x2=7.285*(t-100).*(t>100& t<135);          
+x3=255*(t>=135 & t<=255);
+x=x1+x2+x3;
+
+%% Obtaining contrast stretched image
+for n=1:row
+    for m=1:col
+        out(n,m)=x(a1(n,m)+1);
+    end
+end
+
+out1=imadjust(a1,stretchlim(a1),[]);
+
+plot(x)
+grid on;
+xlabel('Intensity in input image');
+ylabel('Intensity in output image')
+title('Transformation function')
+
+figure()
+subplot(111), imshow(a1), title('Original image')
+figure()
+subplot(111), imshow(uint8(out)), title('Contrast Stretching(using code)')
+figure()
+subplot(111), imshow(out1), title('Contrast Stretching(using stretchlim)')
